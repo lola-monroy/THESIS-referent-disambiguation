@@ -1,0 +1,35 @@
+# big data / generated videos
+datasets/
+Archive*/
+Experiments*/
+qwen_vlm_eval/
+SIMPLIFIED_experiment/
+rga3_dataset_*/
+rga3_tmp/
+yolo_bbox_style/
+yolo_people_bbox_blackbg/
+
+# models / checkpoints
+checkpoints/
+models/
+*.pt
+*.pth
+*.ckpt
+*.bin
+*.safetensors
+
+# external repos
+DeepGaze/
+RecSal-Net/
+RGA3-release/
+
+# temp/cache
+__pycache__/
+*.pyc
+.gradio/
+*.mp4
+*.avi
+*.mov
+*.wav
+*.m4a
+*.jsonl
