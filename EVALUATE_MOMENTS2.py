@@ -1,16 +1,6 @@
 #!/usr/bin/env python3
 """
-evaluate_moments_onvideo_clean.py
----------------------------------
-Evaluate Emotion-LLaMA on one MP4 per ID (no segments, no aggregation).
-
-Logic:
-- Loads MoMentS questions + validation keys (GT)
-- Filters to Emotions-tagged questions (default)
-- Iterates over *.mp4 in DEFAULT_VIDEO_DIR
-- Matches filename stem to question_id or video_id
-- Runs inference ONCE per matched question
-- Writes predictions.jsonl + failed.jsonl + metrics.json
+this one works 
 """
 
 import os
@@ -26,8 +16,8 @@ import numpy as np
 import torch
 
 # ====== CONFIG / PATHS ======
-DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/yolo_bbox_style/green_t2_audio"
-DEFAULT_OUT_DIR = "/scratch/monroy/Playground/Experiments_YOLO_changeBB/green_t2_3rdedeval"
+DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"
+DEFAULT_OUT_DIR = "/scratch/monroy/Playground/Experiments_Baseline_RRERUN_EVAL2"
 DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
 DEFAULT_GT        = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
 

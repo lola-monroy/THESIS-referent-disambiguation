@@ -1,0 +1,9 @@
+{
+  "video_dir": "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo",
+  "questions_path": "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json",
+  "total": 68,
+  "correct": 24,
+  "accuracy": 0.35294117647058826,
+  "pred_none": 0,
+  "failed": 0
+}

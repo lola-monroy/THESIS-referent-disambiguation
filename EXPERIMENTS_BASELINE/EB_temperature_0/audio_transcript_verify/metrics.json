@@ -1,0 +1,61 @@
+{
+  "video_dir": "/scratch/monroy/Playground/Experiments_Baseline/audio_only/dataset_audio_only",
+  "out_dir": "/scratch/monroy/Playground/Experiments_AUTHORS/audio_trans_t0",
+  "temperature": 0.0,
+  "seed": 42,
+  "total": 68,
+  "correct": 26,
+  "accuracy": 0.38235294117647056,
+  "precision": 0.43235294117647055,
+  "recall": 0.38235294117647056,
+  "f1": 0.3851992409867173,
+  "confusion_matrix": [
+    [
+      8,
+      3,
+      4,
+      3
+    ],
+    [
+      4,
+      6,
+      8,
+      4
+    ],
+    [
+      3,
+      1,
+      6,
+      2
+    ],
+    [
+      3,
+      1,
+      6,
+      6
+    ]
+  ],
+  "labels": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "pred_dist": {
+    "A": 18,
+    "D": 15,
+    "B": 11,
+    "C": 24
+  },
+  "gt_dist": {
+    "A": 18,
+    "D": 16,
+    "C": 12,
+    "B": 22
+  },
+  "pred_none": 0,
+  "failed": 0,
+  "skipped": 0,
+  "transcript_hits": 54,
+  "transcript_json": "/scratch/monroy/Playground/Experiments_Baseline/transcripts/transcripts_by_videoid.json"
+}

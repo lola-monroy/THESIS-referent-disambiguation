@@ -1,0 +1,12 @@
+{
+  "video_dir": "/scratch/monroy/Playground/datasets/YOLO_datasets/yolov11mface_video2video_audio",
+  "out_dir": "/scratch/monroy/Playground/EXPERIMENTS_CLEAN/yolo",
+  "temperature": 0.0,
+  "seed": 42,
+  "total": 68,
+  "correct": 23,
+  "accuracy": 0.3382352941176471,
+  "pred_none": 0,
+  "failed": 0,
+  "skipped": 0
+}

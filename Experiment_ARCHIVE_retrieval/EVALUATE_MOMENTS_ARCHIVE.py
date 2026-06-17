@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
 """
-OBSOLETE
 EVALUATE_MOMENTS_ONVIDEO_RESTORED.py
 -----------------------------------
 Single-video-per-ID evaluation for Emotion-LLaMA (the earlier "script 1" style).
@@ -29,12 +28,15 @@ import torch
 # ==============================================================================
 # ====== CONFIG / PATHS ========================================================
 # ==============================================================================
-# DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"
+# DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/yolov11mface_video2video_audio"
+# DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
+# DEFAULT_GT        = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
+# DEFAULT_OUT_DIR   = "/scratch/monroy/Playground/current_validation_results"
+
 DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"
 DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
 DEFAULT_GT        = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
-DEFAULT_OUT_DIR   = "/scratch/monroy/Playground/transcript_baseline"
-DEFAULT_TRANSCRIPTS = "/scratch/monroy/Playground/Experiments_Baseline/transcripts/transcripts_by_videoid.json"
+DEFAULT_OUT_DIR   = "/scratch/monroy/Playground/EVALUATE_MOMENTS_ARCHIVE"
 
 EMOTIONS_ONLY = True
 MIN_CLIP_SIZE_BYTES = 1024
@@ -146,28 +148,19 @@ def write_jsonl(path: Path, obj: Dict):
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
-def build_mcq_prompt(q: Dict, transcript: str = "") -> str:
+def build_mcq_prompt(q: Dict) -> str:
     question = (q.get("question") or "").strip()
     opts = q.get("options") or {}
     A, B, C, D = [opts.get(k, "").strip() for k in "ABCD"]
-
-    transcript = (transcript or "").strip()
-    transcript_block = (
-        f"Transcript (may be noisy / imperfect ASR):\n{transcript}\n\n"
-        if transcript else
-        "Transcript (may be noisy / imperfect ASR):\n[NO TRANSCRIPT AVAILABLE]\n\n"
-    )
-
     return (
         f"{question}\n\n"
         f"Options:\nA. {A}\nB. {B}\nC. {C}\nD. {D}\n\n"
-        f"{transcript_block}"
-        f"Task: Analyze the video together with the transcript and choose the single best answer (A, B, C, or D).\n"
+        f"Task: Analyze the video and choose the single best answer (A, B, C, or D).\n"
         f"Instructions:\n"
-        f"1. Use both the visual evidence and the transcript if helpful, but do not rely blindly on the transcript because it may contain recognition errors.\n"
-        f"2. First, provide a very brief one-sentence reason for EACH option (A, B, C, and D).\n"
-        f"3. Finally, output a new line exactly in this format: FINAL_ANSWER: [LETTER]\n"
+        f"1. IMPORTANT: First, provide a very brief one-sentence reason for EACH option (A, B, C, and D).\n"
+        f"2. Finally, output a new line exactly in this format: FINAL_ANSWER: [LETTER]\n"
     )
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
@@ -188,9 +181,6 @@ def main():
 
     # Load questions
     all_questions = load_json(str(q_path))
-
-    # Load transcripts
-    transcripts_map = load_json(DEFAULT_TRANSCRIPTS)
 
     # Index questions by BOTH question_id and video_id
     qid_to_qs: Dict[str, List[Dict]] = {}
@@ -251,8 +241,7 @@ def main():
                 failed += 1
                 continue
 
-            transcript = transcripts_map.get(stem, "")
-            prompt = build_mcq_prompt(qrec, transcript)
+            prompt = build_mcq_prompt(qrec)
             log.info(f"Video {stem} | Question {qid}: Running inference")
 
             try:
@@ -280,7 +269,9 @@ def main():
                 log.exception(f"Error processing question {qid} (video {stem})")
                 write_jsonl(fail_jsonl, {"question_id": qid, "video_id": stem, "error": str(e)})
 
-    metrics = {
+        metrics = {
+        "video_dir": str(video_dir),
+        "questions_path": str(q_path),
         "total": total,
         "correct": correct,
         "accuracy": correct / total if total > 0 else 0.0,

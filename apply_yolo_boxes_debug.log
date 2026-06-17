@@ -1,0 +1,145 @@
+video-dir: /scratch/monroy/Playground/datasets/MoMentS_val_videos_emo
+out-root:  /scratch/monroy/Playground/datasets/YOLO_datasets_rewrite
+models:    ['yolov8']
+
+=== yolov8 (yolov8x.pt) -> /scratch/monroy/Playground/datasets/YOLO_datasets_rewrite/yolov8_boxes ===
+Found 68 clips in /scratch/monroy/Playground/datasets/MoMentS_val_videos_emo
+[1/68] -53z5.mp4
+     467 frames processed
+[2/68] -56jD.mp4
+     186 frames processed
+[3/68] 0-VJ7.mp4
+     438 frames processed
+[4/68] 0Xj5E.mp4
+     828 frames processed
+[5/68] 31jsL.mp4
+     633 frames processed
+[6/68] 31qIC.mp4
+     225 frames processed
+[7/68] 3ZqYH.mp4
+     126 frames processed
+[8/68] 6n72z.mp4
+     62 frames processed
+[9/68] 75wmF.mp4
+     345 frames processed
+[10/68] 7dQfa.mp4
+     1048 frames processed
+[11/68] 7lg8O.mp4
+     105 frames processed
+[12/68] 7sD0G.mp4
+     532 frames processed
+[13/68] 8jx-M.mp4
+     900 frames processed
+[14/68] 8q-cP.mp4
+     105 frames processed
+[15/68] 8wPdw.mp4
+     184 frames processed
+[16/68] AHb-v.mp4
+     187 frames processed
+[17/68] BrX9b.mp4
+     174 frames processed
+[18/68] DNJbQ.mp4
+     935 frames processed
+[19/68] DpI2f.mp4
+     319 frames processed
+[20/68] E3dNw.mp4
+     683 frames processed
+[21/68] FSs2u.mp4
+     487 frames processed
+[22/68] FtZC0.mp4
+     261 frames processed
+[23/68] HHKmc.mp4
+     141 frames processed
+[24/68] JQ7mA.mp4
+     194 frames processed
+[25/68] KMFQY.mp4
+     348 frames processed
+[26/68] MQK3I.mp4
+     702 frames processed
+[27/68] MemBt.mp4
+     123 frames processed
+[28/68] NBjXy.mp4
+     499 frames processed
+[29/68] NNkHt.mp4
+     196 frames processed
+[30/68] O61ie.mp4
+     263 frames processed
+[31/68] OJJhw.mp4
+     2497 frames processed
+[32/68] OeWzG.mp4
+     107 frames processed
+[33/68] QK6bQ.mp4
+     1314 frames processed
+[34/68] Sqpw2.mp4
+     90 frames processed
+[35/68] TnLVW.mp4
+     71 frames processed
+[36/68] X05cR.mp4
+     344 frames processed
+[37/68] XsPyQ.mp4
+     662 frames processed
+[38/68] Y85Zg.mp4
+     242 frames processed
+[39/68] ZTgmN.mp4
+     496 frames processed
+[40/68] _paES.mp4
+     167 frames processed
+[41/68] aWgG2.mp4
+     483 frames processed
+[42/68] b-BJp.mp4
+     340 frames processed
+[43/68] dBuuK.mp4
+     245 frames processed
+[44/68] eMYWR.mp4
+     469 frames processed
+[45/68] fL1sO.mp4
+     341 frames processed
+[46/68] fTZMz.mp4
+     696 frames processed
+[47/68] gqGp_.mp4
+     448 frames processed
+[48/68] iNEhw.mp4
+     1936 frames processed
+[49/68] if4TJ.mp4
+     312 frames processed
+[50/68] kPCFa.mp4
+     1794 frames processed
+[51/68] kREcQ.mp4
+     537 frames processed
+[52/68] lP7DH.mp4
+     926 frames processed
+[53/68] nDSVR.mp4
+     184 frames processed
+[54/68] pV9P4.mp4
+     146 frames processed
+[55/68] q0jUM.mp4
+     385 frames processed
+[56/68] snVuK.mp4
+     161 frames processed
+[57/68] tWgjm.mp4
+     7372 frames processed
+[58/68] uHOYT.mp4
+     1510 frames processed
+[59/68] uHmhm.mp4
+     53 frames processed
+[60/68] uiqPd.mp4
+     111 frames processed
+[61/68] wXuwT.mp4
+     326 frames processed
+[62/68] wf8Ir.mp4
+     1682 frames processed
+[63/68] whD5C.mp4
+     1684 frames processed
+[64/68] x0JQT.mp4
+     82 frames processed
+[65/68] xNKuD.mp4
+     305 frames processed
+[66/68] xjVS2.mp4
+     755 frames processed
+[67/68] xnH9q.mp4
+     2882 frames processed
+[68/68] zxgYS.mp4
+     199 frames processed
+=== yolov8 done: /scratch/monroy/Playground/datasets/YOLO_datasets_rewrite/yolov8_boxes ===
+
+ALL DONE.

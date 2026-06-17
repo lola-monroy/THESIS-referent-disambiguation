@@ -11,11 +11,10 @@ from transformers import AutoProcessor, Qwen2_5_VLForConditionalGeneration
 from qwen_vl_utils import process_vision_info
 
 
-DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"
-DEFAULT_OUT_DIR = "/scratch/monroy/Playground/qwen_vlm_eval/original_emotions"
+DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/rga3_dataset_redshade"
+DEFAULT_OUT_DIR = "/scratch/monroy/Playground/qwen_eval_2/05_06_rga3_redshade2"
 DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
 DEFAULT_GT = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
-
 EMOTIONS_ONLY = True
 MIN_CLIP_SIZE_BYTES = 1024
 

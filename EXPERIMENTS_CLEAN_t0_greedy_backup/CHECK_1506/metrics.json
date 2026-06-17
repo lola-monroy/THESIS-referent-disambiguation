@@ -1,0 +1,12 @@
+{
+  "video_dir": "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo",
+  "out_dir": "/scratch/monroy/Playground/EXPERIMENTS_CLEAN_t0_greedy_backup/CHECK_1506",
+  "temperature": 0.0,
+  "seed": 42,
+  "total": 68,
+  "correct": 20,
+  "accuracy": 0.29411764705882354,
+  "pred_none": 1,
+  "failed": 0,
+  "skipped": 0
+}

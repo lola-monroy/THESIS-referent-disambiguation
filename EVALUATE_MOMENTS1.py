@@ -1,18 +1,4 @@
 #!/usr/bin/env python3
-"""
-EVALUATE_MOMENTS_ONVIDEO_RESTORED.py
------------------------------------
-Single-video-per-ID evaluation for Emotion-LLaMA (the earlier "script 1" style).
-
-Logic:
-- Loads MoMentS validation questions + keys (GT)
-- Filters to Emotions-tagged questions (default)
-- Iterates over *.mp4 in DEFAULT_VIDEO_DIR
-- Matches filename stem to question_id or video_id
-- Runs inference ONCE per matched question
-- Writes JSONL + metrics
-"""
-
 import os
 import re
 import sys
@@ -31,8 +17,8 @@ import torch
 # DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"
 # DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/rga3_dataset_outputs"  # where the segmented videos from RGA3 script are stored
 # DEFAULT_OUT_DIR = "/scratch/monroy/Playground/rga3_segmented_eval_24"
-DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/yolo_bbox_style/green_t2_audio"
-DEFAULT_OUT_DIR = "/scratch/monroy/Playground/Experiments_YOLO_changeBB/green_t2_eval"
+DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"  # where the original unsegmented videos are stored
+DEFAULT_OUT_DIR = "/scratch/monroy/Playground/Experiments_Baseline_RRERUN_EVAL1"
 DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
 DEFAULT_GT        = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
 EMOTIONS_ONLY = True
@@ -146,6 +132,19 @@ def write_jsonl(path: Path, obj: Dict):
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
+# def build_mcq_prompt(q: Dict) -> str:
+#     question = (q.get("question") or "").strip()
+#     opts = q.get("options") or {}
+#     A, B, C, D = [opts.get(k, "").strip() for k in "ABCD"]
+#     return (
+#         f"{question}\n\n"
+#         f"Options:\nA. {A}\nB. {B}\nC. {C}\nD. {D}\n\n"
+#         f"Task: Analyze the video and choose the single best answer (A, B, C, or D).\n"
+#         f"Instructions:\n"
+#         f"1. IMPORTANT: choose the single best answer (A, B, C, and D).\n"
+#         f"2. Finally, output a new line exactly in this format: FINAL_ANSWER: [LETTER]\n"
+#     )
+
 def build_mcq_prompt(q: Dict) -> str:
     question = (q.get("question") or "").strip()
     opts = q.get("options") or {}
@@ -153,12 +152,10 @@ def build_mcq_prompt(q: Dict) -> str:
     return (
         f"{question}\n\n"
         f"Options:\nA. {A}\nB. {B}\nC. {C}\nD. {D}\n\n"
-        f"Task: Analyze the video and choose the single best answer (A, B, C, or D).\n"
         f"Instructions:\n"
-        f"1. IMPORTANT: First, provide a very brief one-sentence reason for EACH option (A, B, C, and D).\n"
+        f"1. Analyze the video and choose the single best answer (A, B, C, or D).\n"
         f"2. Finally, output a new line exactly in this format: FINAL_ANSWER: [LETTER]\n"
     )
-
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():

@@ -1,0 +1,12 @@
+{
+  "video_dir": "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo",
+  "out_dir": "/scratch/monroy/Playground/baseline_eval3_t1",
+  "temperature": 0.1,
+  "seed": 42,
+  "total": 68,
+  "correct": 25,
+  "accuracy": 0.36764705882352944,
+  "pred_none": 1,
+  "failed": 0,
+  "skipped": 0
+}

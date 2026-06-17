@@ -1,0 +1,56 @@
+{
+  "video_dir": "/scratch/monroy/Playground/Experiments_Baseline/video_only/dataset_video_only",
+  "out_dir": "/scratch/monroy/Playground/Experiments_AUTHORS/frames_trans",
+  "total": 68,
+  "correct": 23,
+  "accuracy": 0.3382352941176471,
+  "precision": 0.4312592684132477,
+  "recall": 0.3382352941176471,
+  "f1": 0.3418034298358842,
+  "confusion_matrix": [
+    [
+      8,
+      2,
+      5,
+      3
+    ],
+    [
+      1,
+      3,
+      14,
+      4
+    ],
+    [
+      1,
+      1,
+      6,
+      4
+    ],
+    [
+      2,
+      1,
+      7,
+      6
+    ]
+  ],
+  "labels": [
+    "A",
+    "B",
+    "C",
+    "D"
+  ],
+  "pred_dist": {
+    "A": 12,
+    "D": 17,
+    "B": 7,
+    "C": 32
+  },
+  "gt_dist": {
+    "A": 18,
+    "D": 16,
+    "C": 12,
+    "B": 22
+  },
+  "pred_none": 0,
+  "failed": 0
+}

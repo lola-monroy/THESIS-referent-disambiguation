@@ -1,0 +1,15 @@
+{
+  "video_dir": "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo",
+  "out_dir": "/scratch/monroy/Playground/Experiments_Baseline_RERUN/video_transcript_16f",
+  "use_video": true,
+  "num_frames": 16,
+  "temperature": 0.1,
+  "seed": 42,
+  "total": 68,
+  "correct": 17,
+  "accuracy": 0.25,
+  "pred_none": 1,
+  "failed": 0,
+  "skipped": 0,
+  "transcript_hits": 54
+}

@@ -1,0 +1,13 @@
+{
+  "video_dir": "/scratch/monroy/Playground/Experiments_Baseline/video_only/dataset_video_only",
+  "out_dir": "/scratch/monroy/Playground/Experiments_Baseline_RERUN/video_only_transcript",
+  "temperature": 0.1,
+  "seed": 42,
+  "total": 68,
+  "correct": 20,
+  "accuracy": 0.29411764705882354,
+  "pred_none": 0,
+  "failed": 0,
+  "skipped": 2,
+  "transcript_hits": 0
+}

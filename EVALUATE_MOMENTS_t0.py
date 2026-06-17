@@ -1,18 +1,6 @@
 #!/usr/bin/env python3
 """
-OBSOLETE
-EVALUATE_MOMENTS_ONVIDEO_RESTORED.py
------------------------------------
-Single-video-per-ID evaluation for Emotion-LLaMA (the earlier "script 1" style).
-
-Logic:
-- Loads MoMentS validation questions + keys (GT)
-- Filters to Emotions-tagged questions (default)
-- Iterates over *.mp4 in DEFAULT_VIDEO_DIR
-- Matches filename stem to question_id or video_id
-- Runs inference ONCE per matched question
-- Writes JSONL + metrics
-"""
+t = 0.2"""
 
 import os
 import re
@@ -21,30 +9,22 @@ import json
 import random
 import logging
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, Optional, List
 
 import numpy as np
 import torch
 
-# ==============================================================================
-# ====== CONFIG / PATHS ========================================================
-# ==============================================================================
-# DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"
-DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo"
+# ====== CONFIG / PATHS ======
+DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/MoMentS_val_videos_emo_REFERENT_v2"  # where the original unsegmented videos are stored
+DEFAULT_OUT_DIR = "/scratch/monroy/Playground/referent_v2_evaluate/script_t1_REFERENT"
 DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
 DEFAULT_GT        = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
-DEFAULT_OUT_DIR   = "/scratch/monroy/Playground/transcript_baseline"
-DEFAULT_TRANSCRIPTS = "/scratch/monroy/Playground/Experiments_Baseline/transcripts/transcripts_by_videoid.json"
+
 
 EMOTIONS_ONLY = True
 MIN_CLIP_SIZE_BYTES = 1024
 
-# These existed in the older file, but are NOT used in this single-video script.
-AGG_MODE = "top1"
-WEIGHT_POWER = 1.0
-FALLBACK_MARGIN = 0.05
-# ==============================================================================
-
+# ── logging ──────────────────────────────────────────────────────────────────
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s  %(levelname)-8s  %(message)s",
@@ -52,6 +32,7 @@ logging.basicConfig(
 )
 log = logging.getLogger(__name__)
 
+# ── seeds ────────────────────────────────────────────────────────────────────
 random.seed(42)
 np.random.seed(42)
 torch.manual_seed(42)
@@ -91,16 +72,14 @@ def load_official_model(cfg_path: str = "eval_configs/demo.yaml", gpu_id: int = 
 
     return Chat(model, vis_processor, device=device), device
 
-
-def run_inference(chat, video_path: str, question: str, device: str) -> str:
+def run_inference(chat, video_path: str, question: str) -> str:
     """Run clip inference mirrors cli_inference.py."""
     from minigpt4.conversation.conversation import Conversation, SeparatorStyle
-
     chat_state = Conversation(
-        system="", roles=(r"<s>[INST] ", r" [/INST]"),
-        messages=[], offset=2,
+        system="", roles=(r"<s>[INST] ", r" [/INST]"), messages=[], offset=2,
         sep_style=SeparatorStyle.SINGLE, sep="",
     )
+
     full_prompt = f"<video><VideoHere></video> <feature><FeatureHere></feature> {question}"
     chat.ask(full_prompt, chat_state)
 
@@ -111,15 +90,14 @@ def run_inference(chat, video_path: str, question: str, device: str) -> str:
     response = chat.answer(
         conv=chat_state,
         img_list=img_list,
-        temperature=0.2,
+        temperature=0.1,
         max_new_tokens=500,
-        max_length=2000,
+        max_length=2000
     )[0]
     return response
 
-
 def extract_choice_letter(text: str) -> Optional[str]:
-    """Helper to extract A/B/C/D from model response."""
+    """Extract A/B/C/D from model response."""
     if not text:
         return None
     t = text.strip()
@@ -146,28 +124,18 @@ def write_jsonl(path: Path, obj: Dict):
     with open(path, "a", encoding="utf-8") as f:
         f.write(json.dumps(obj, ensure_ascii=False) + "\n")
 
-def build_mcq_prompt(q: Dict, transcript: str = "") -> str:
+def build_mcq_prompt(q: Dict) -> str:
     question = (q.get("question") or "").strip()
     opts = q.get("options") or {}
     A, B, C, D = [opts.get(k, "").strip() for k in "ABCD"]
-
-    transcript = (transcript or "").strip()
-    transcript_block = (
-        f"Transcript (may be noisy / imperfect ASR):\n{transcript}\n\n"
-        if transcript else
-        "Transcript (may be noisy / imperfect ASR):\n[NO TRANSCRIPT AVAILABLE]\n\n"
-    )
-
     return (
-        f"{question}\n\n"
-        f"Options:\nA. {A}\nB. {B}\nC. {C}\nD. {D}\n\n"
-        f"{transcript_block}"
-        f"Task: Analyze the video together with the transcript and choose the single best answer (A, B, C, or D).\n"
-        f"Instructions:\n"
-        f"1. Use both the visual evidence and the transcript if helpful, but do not rely blindly on the transcript because it may contain recognition errors.\n"
-        f"2. First, provide a very brief one-sentence reason for EACH option (A, B, C, and D).\n"
-        f"3. Finally, output a new line exactly in this format: FINAL_ANSWER: [LETTER]\n"
+        f"{question}\n\nOptions:\nA. {A}\nB. {B}\nC. {C}\nD. {D}\n\n"
+        "Task: Analyze the video and choose the single best answer (A, B, C, or D).\n"
+        "Instructions:\n"
+        "1. IMPORTANT: First, provide a very brief one-sentence reason for EACH option (A, B, C, and D).\n"
+        "2. Finally, output a new line exactly in this format: FINAL_ANSWER: [LETTER]\n"
     )
+
 # ── Main ─────────────────────────────────────────────────────────────────────
 
 def main():
@@ -186,13 +154,9 @@ def main():
         log.error(f"Questions file not found: {q_path}")
         return
 
-    # Load questions
     all_questions = load_json(str(q_path))
 
-    # Load transcripts
-    transcripts_map = load_json(DEFAULT_TRANSCRIPTS)
-
-    # Index questions by BOTH question_id and video_id
+    # index questions by question_id and video_id
     qid_to_qs: Dict[str, List[Dict]] = {}
     vid_to_qs: Dict[str, List[Dict]] = {}
     for q in all_questions:
@@ -203,14 +167,13 @@ def main():
         if vid:
             vid_to_qs.setdefault(vid, []).append(q)
 
-    # Load GT map
     gt_map = {
         str(x["question_id"]).strip(): str(x["correct_answer_key"]).upper()
         for x in load_json(DEFAULT_GT)
         if "question_id" in x
     }
 
-    # Model load
+    # model load
     llama_root = "/scratch/monroy/Emotion-LLaMA"
     if llama_root not in sys.path:
         sys.path.insert(0, llama_root)
@@ -225,11 +188,10 @@ def main():
     log.info(f"Found {len(video_files)} videos in {video_dir}")
 
     for clip_path in video_files:
-        stem = clip_path.stem.strip()  # e.g. '_paES'
+        stem = clip_path.stem.strip()
         qrecs = qid_to_qs.get(stem) or vid_to_qs.get(stem)
-
         if not qrecs:
-            log.warning(f"ID '{stem}' NOT FOUND in questions JSON fields (question_id or video_id). Skipping.")
+            log.warning(f"ID '{stem}' not found in questions JSON (question_id or video_id). Skipping.")
             continue
 
         for qrec in qrecs:
@@ -243,20 +205,19 @@ def main():
 
             gt = gt_map.get(qid)
             if not gt:
-                log.warning(f"No GT found for question_id: {qid}. Skipping.")
+                log.warning(f"No GT found for question_id {qid}. Skipping.")
                 continue
 
-            if not clip_path.exists() or clip_path.stat().st_size < MIN_CLIP_SIZE_BYTES:
+            if (not clip_path.exists()) or (clip_path.stat().st_size < MIN_CLIP_SIZE_BYTES):
                 write_jsonl(fail_jsonl, {"question_id": qid, "video_id": stem, "error": "missing_or_too_small"})
                 failed += 1
                 continue
 
-            transcript = transcripts_map.get(stem, "")
-            prompt = build_mcq_prompt(qrec, transcript)
+            prompt = build_mcq_prompt(qrec)
             log.info(f"Video {stem} | Question {qid}: Running inference")
 
             try:
-                raw = run_inference(chat, str(clip_path), prompt, device)
+                raw = run_inference(chat, str(clip_path), prompt)
                 pred = extract_choice_letter(raw)
 
                 rec = {
@@ -283,7 +244,7 @@ def main():
     metrics = {
         "total": total,
         "correct": correct,
-        "accuracy": correct / total if total > 0 else 0.0,
+        "accuracy": (correct / total) if total else 0.0,
         "pred_none": pred_none,
         "failed": failed,
     }

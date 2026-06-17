@@ -1,0 +1,12 @@
+{
+  "video_dir": "/scratch/monroy/Playground/datasets/grounded_videos",
+  "out_dir": "/scratch/monroy/Playground/EXPERIMENTS_CLEAN/grounded",
+  "temperature": 0.1,
+  "seed": 42,
+  "total": 52,
+  "correct": 16,
+  "accuracy": 0.3076923076923077,
+  "pred_none": 0,
+  "failed": 0,
+  "skipped": 0
+}

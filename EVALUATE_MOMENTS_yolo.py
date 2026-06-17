@@ -26,13 +26,11 @@ import numpy as np
 import torch
 
 # ====== CONFIG / PATHS ======
-# DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/YOLO_datasets/yolov11mface_video2video_whitenoise"
-# DEFAULT_OUT_DIR   = "/scratch/monroy/Playground/YOLO_Experiments/it5_whitenoise"
-# DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
-# DEFAULT_GT        = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
 
-DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/yolo_bbox_style/green_t2_audio"
-DEFAULT_OUT_DIR = "/scratch/monroy/Playground/Experiments_YOLO_changeBB/green_t2_eval_prompt"
+DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/YOLO_datasets/yolov11mface_video2video_audio"  # where the original unsegmented videos are stored
+DEFAULT_OUT_DIR = "/scratch/monroy/Playground/Experiments_AUTHORS/yolo11m_face_t0"
+# DEFAULT_VIDEO_DIR = "/scratch/monroy/Playground/datasets/YOLO_datasets/yolo_bbox_style/red_t2_audio"  # where the original unsegmented videos are stored
+# DEFAULT_OUT_DIR = "/scratch/monroy/Playground/Experiments_YOLO_changeBB/Handmade/yolo_red_t2"
 DEFAULT_QUESTIONS = "/scratch/monroy/Playground/datasets/MoMentS/data/moments_questions_updated.json"
 DEFAULT_GT        = "/scratch/monroy/Playground/datasets/MoMentS/data/validation/moments_validation_keys.json"
 EMOTIONS_ONLY = True
@@ -106,7 +104,8 @@ def run_inference(chat, video_path: str, question: str) -> str:
     response = chat.answer(
         conv=chat_state,
         img_list=img_list,
-        temperature=0.2,
+        # temperature=0.2,
+        temperature=0,
         max_new_tokens=500,
         max_length=2000
     )[0]
@@ -147,7 +146,7 @@ def build_mcq_prompt(q: Dict) -> str:
     return (
         f"{question}\n\nOptions:\nA. {A}\nB. {B}\nC. {C}\nD. {D}\n\n"
         "Task: Analyze the video and choose the single best answer (A, B, C, or D).\n"
-        "Pay attention to the subjects inside the green bounding boxes.\n"
+        # "Pay attention to the subjects inside the green bounding boxes.\n"
         "Instructions:\n"
         "1. IMPORTANT: First, provide a very brief one-sentence reason for EACH option (A, B, C, and D).\n"
         "2. Finally, output a new line exactly in this format: FINAL_ANSWER: [LETTER]\n"

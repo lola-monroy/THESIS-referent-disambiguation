@@ -1,0 +1,12 @@
+{
+  "video_dir": "/scratch/monroy/Playground/Experiments_Baseline/audio_only/dataset_audio_only",
+  "out_dir": "/scratch/monroy/Playground/EXPERIMENTS_CLEAN/audio_only",
+  "temperature": 0.1,
+  "seed": 42,
+  "total": 68,
+  "correct": 25,
+  "accuracy": 0.36764705882352944,
+  "pred_none": 1,
+  "failed": 0,
+  "skipped": 0
+}
